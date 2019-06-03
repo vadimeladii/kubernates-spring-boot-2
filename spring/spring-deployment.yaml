@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring
+  labels:
+    app: spring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring
+  template:
+    metadata:
+      labels:
+        app: spring
+    spec:
+      containers:
+        - name: springboot2
+          image: vadimeladii7/springboot2:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: spring-config
+          volumeMounts:
+            - mountPath: /var/lib/spring/data
+              name: springdb
+      volumes:
+        - name: springdb
+          persistentVolumeClaim:
+            claimName: spring-pv-claim
